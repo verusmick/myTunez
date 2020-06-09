@@ -33,3 +33,6 @@ npm-debug.log
 static/*
 
 .idea
+
+uploads/img/*
+uploads/song/*
