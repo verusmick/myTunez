@@ -7,7 +7,7 @@ const multipart = require('connect-multiparty');
 router.get('/', function (req, res, next) {
     db.query('SELECT * FROM  artist', function (err, results) {
         let response = {
-            "success": err ? true : false,
+            "success": err ? false : true,
             "message": "",
             "data": {}
         }
@@ -26,19 +26,19 @@ router.get('/', function (req, res, next) {
 });
 
 const multipartMiddleware = multipart({
-    uploadDir: './uploads/img'
+    uploadDir: './uploads/artist'
 });
 
-/* POST artist listing. */
+/* POST artist */
 router.post('/', multipartMiddleware, function (req, res, next) {
-    let body = req.body;    
-    let imgPath = req.files.uploads[0].path.split('/').pop();
+    let body = req.body;
+    let imgPath = req.files.uploads ? req.files.uploads[0].path.split('/').pop() : 'defaultImg.png';
     let query = `INSERT INTO artist (name, genres, members, website, img_path)     
     VALUES ('${body.name}', '${body.genres}', '${body.members}', '${body.website}', '${imgPath}')`;
 
     db.query(query, function (err, results) {
         let response = {
-            "success": err ?  false:true,
+            "success": err ? false : true,
             "message": "",
             "data": {}
         }
