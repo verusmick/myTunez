@@ -5,7 +5,24 @@ const multipart = require('connect-multiparty');
 
 /* GET artist listing. */
 router.get('/', function (req, res, next) {
-    res.send('respond with a resource');    
+    db.query('SELECT * FROM  artist', function (err, results) {
+        let response = {
+            "success": err ? true : false,
+            "message": "",
+            "data": {}
+        }
+
+        if (err) {
+            response.message = 'Error in get Artists process'
+        } else {
+            response.message = 'Data Found'
+            response.data = {
+                requests: results
+            }
+
+        }
+        return res.json(response)
+    })
 });
 
 const multipartMiddleware = multipart({
@@ -14,9 +31,26 @@ const multipartMiddleware = multipart({
 
 /* POST artist listing. */
 router.post('/', multipartMiddleware, function (req, res, next) {
-    res.json({
-        'message': 'File uploaded succesfully.'
-    });
+    let body = req.body;    
+    let imgPath = req.files.uploads[0].path.split('/').pop();
+    let query = `INSERT INTO artist (name, genres, members, website, img_path)     
+    VALUES ('${body.name}', '${body.genres}', '${body.members}', '${body.website}', '${imgPath}')`;
+
+    db.query(query, function (err, results) {
+        let response = {
+            "success": err ?  false:true,
+            "message": "",
+            "data": {}
+        }
+
+        if (err) {
+            response.message = err.sqlMessage
+        } else {
+            response.message = 'Artist added succesfully'
+            response.data = results
+        }
+        return res.json(response)
+    })
 });
 
 
