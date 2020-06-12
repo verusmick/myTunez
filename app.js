@@ -29,13 +29,25 @@ app.use('/src', express.static(__dirname+'/uploads'));
 // routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/artists', artistsRouter);
-app.use('/songs', songsRouter);
+app.use('/artists',validaApiKey, artistsRouter);
+app.use('/songs', validaApiKey,songsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
+var ApiKey="mytunez-tk";
+
+// Token interceptor
+function validaApiKey(req, res, next) {
+  if(req.headers['api-key'] !== ApiKey){
+    res.status(403).json({status: "error", message: 'No Tienes Accesso al Server', data: null});
+  }else{
+    next();
+  }
+}
 
 // error handler
 app.use(function(err, req, res, next) {

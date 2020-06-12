@@ -38,7 +38,7 @@ router.post('/', multipartMiddleware, function (req, res, next) {
     let songPath = req.files.uploads.find(obj => { return obj.type.indexOf('audio') === -1 ? false : true }).path.split('/').pop();
 
     let query = `INSERT INTO song (title, genre, release_year, artist_id, album, length, img_path, song_path)
-     VALUES ('${body.title}','${body.genre}', '${body.releaseYear}', ${parseInt(body.artistId)}, '${body.album}', '${body.lenght}', '${imgPath}', '${songPath}')`;
+                 VALUES ('${body.title}','${body.genre}', '${body.releaseYear}', ${parseInt(body.artistId)}, '${body.album}', '${body.lenght}', '${imgPath}', '${songPath}')`;
 
     db.query(query, function (err, results) {
         let response = {

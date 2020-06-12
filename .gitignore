@@ -34,3 +34,5 @@ static/*
 
 .idea
 
+uploads/artist/*
+uploads/song/*
